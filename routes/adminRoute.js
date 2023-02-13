@@ -3,7 +3,7 @@ import officeController from '../controllers/officeController.js'
 import aspirantController from '../controllers/aspirantController.js'
 import pollController from '../controllers/pollController.js'
 import voterController from '../controllers/voterController.js'
-import { upload, requireAdminAuth, handleUploadErr } from '../controllers/middlewares.js'
+import { requireAdminAuth } from '../controllers/middlewares.js'
 
 const router = express.Router()
 

@@ -1,49 +1,32 @@
 import jwt from 'jsonwebtoken'
 import multer from 'multer'
-// save avatar
-let avatar_name_;
-/*const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // cb(null, '/uploads')
-    cb(null, 'C:/Users/king/Desktop/voting-system/uploads')
-  }
-  , filename: function (req, file, cb) {
-    let temp_file_arr = file.originalname.split('.')
-    let temp_file_name = temp_file_arr[0]
-    let temp_file_extension = temp_file_arr[1]
-    const accepted_file = ["jpeg", "png", "jpg"]
-      cb(null, avatar_name_)
-    if (accepted_file.includes(temp_file_extension)) {
-      avatar_name_ = `${temp_file_name}_${Date.now()}_${Math.round(Math.random() * 1E9)}.${temp_file_extension}`
-      // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      req.locals = { avatar_name_ }
-    } else {}
-  }
-})*/
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '../uploads')
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix)
-  }
+import { v2 as cloudinary } from 'cloudinary'
+
+console.log(process.env.cloudinary_cloud_name, process.env.cloudinary_api_key, process.env.cloudinary_api_secret)
+
+// cloudinary function -------------------------
+cloudinary.config({
+  cloud_name: process.env.cloudinary_cloud_name
+  , api_key: process.env.cloudinary_api_key
+  , api_secret: process.env.cloudinary_api_secret
 })
 
-// export const upload = multer({storage}).single('avatar')
-export const upload = multer({ storage: storage }).single('avatar')
-// upload(req, res, function (err) {
-//   console.log(err)
-//   res.locals.avatar_name = avatar_name
-//   if (err) return res.status(505)
-//     .json({ ok: false, msg: 'Error Uploading image' })
-// })
-export const handleUploadErr = (err,req,res,next)=>{
-  if (err instanceof multer.MulterError) {
-    res.status(400).json({ok:false,msg:err.message})
+export const uploadImage = async (image) => {
+  const options = {
+    use_filename: true
+    , unique_filename: true
+    , overwrite: true
+  }
+
+  try {
+    // Upload the image
+    const result = await cloudinary.uploader.upload(image, options);
+    console.log(result);
+    return { public_id: result.public_id, url: result.url };
+  } catch (error) {
+    console.error(error);
   }
 }
-
 
 export const requireVoterAuth = (req, res, next) => {
 
@@ -87,3 +70,48 @@ export const requireAdminAuth = (req, res, next) => {
   }
   // next()
 }
+
+
+// save avatar
+// let avatar_name_;
+// /*const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     // cb(null, '/uploads')
+//     cb(null, 'C:/Users/king/Desktop/voting-system/uploads')
+//   }
+//   , filename: function (req, file, cb) {
+//     let temp_file_arr = file.originalname.split('.')
+//     let temp_file_name = temp_file_arr[0]
+//     let temp_file_extension = temp_file_arr[1]
+//     const accepted_file = ["jpeg", "png", "jpg"]
+//       cb(null, avatar_name_)
+//     if (accepted_file.includes(temp_file_extension)) {
+//       avatar_name_ = `${temp_file_name}_${Date.now()}_${Math.round(Math.random() * 1E9)}.${temp_file_extension}`
+//       // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+//       req.locals = { avatar_name_ }
+//     } else {}
+//   }
+// })*/
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, '../uploads')
+//   }
+//   , filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+//     cb(null, file.fieldname + '-' + uniqueSuffix)
+//   }
+// })
+
+// // export const upload = multer({storage}).single('avatar')
+// export const upload = multer({ storage: storage }).single('avatar')
+// // upload(req, res, function (err) {
+// //   console.log(err)
+// //   res.locals.avatar_name = avatar_name
+// //   if (err) return res.status(505)
+// //     .json({ ok: false, msg: 'Error Uploading image' })
+// // })
+// export const handleUploadErr = (err, req, res, next) => {
+//   if (err instanceof multer.MulterError) {
+//     res.status(400).json({ ok: false, msg: err.message })
+//   }
+// }
