@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 import multer from 'multer'
 import { v2 as cloudinary } from 'cloudinary'
 
-console.log(process.env.cloudinary_cloud_name, process.env.cloudinary_api_key, process.env.cloudinary_api_secret)
 
 // cloudinary function -------------------------
 cloudinary.config({
@@ -16,16 +15,47 @@ export const uploadImage = async (image) => {
     use_filename: true
     , unique_filename: true
     , overwrite: true
+    , resource_type: "auto"
+    , invalidate: true
+
   }
 
   try {
     // Upload the image
     const result = await cloudinary.uploader.upload(image, options);
-    console.log(result);
-    return { public_id: result.public_id, url: result.url };
+    // console.log(result);
+    return { image_details: result }
   } catch (error) {
-    console.error(error);
+    // console.log(error)
+    return { error }
   }
+}
+
+let returned_respinse = {
+  asset_id: '8025bbebaf14bacd52a8e45eea306898'
+  , public_id: 'Emmanuel_vlyzdc'
+  , version: 1676295961
+  , version_id: '34509c73dcab8b6a26b19ae2ee80c064'
+  , signature: '3db52ee41c33758ff7b914bf07c9c0336abbfa91'
+  , width: 150
+  , height: 177
+  , format: 'jpg'
+  , resource_type: 'image'
+  , created_at: '2023-02-13T13:46:01Z'
+  , tags: []
+  , bytes: 18951
+  , type: 'upload'
+  , etag: 'dc486fd948e75bfe96cc0e8c2084ef34'
+  , placeholder: false
+  , url: 'http://res.cloudinary.com/drzmvhomu/image/upload/v1676295961/Emmanuel_vlyzdc.jpg'
+  , secure_url: 'https://res.cloudinary.com/drzmvhomu/image/upload/v1676295961/Emmanuel_vlyzdc.jpg'
+  , folder: ''
+  , original_filename: 'Emmanuel'
+  , api_key: '861945827833516'
+}
+returned_respinse = {
+  public_id: 'Emmanuel_vlyzdc'
+  , url: 'http://res.cloudinary.com/drzmvhomu/image/upload/v1676295961/Emmanuel_vlyzdc.jpg'
 }
 
 export const requireVoterAuth = (req, res, next) => {
@@ -35,6 +65,7 @@ export const requireVoterAuth = (req, res, next) => {
     jwt.verify(token, process.env.secreTokenKey, (err, dt) => {
       if (err) {
         // res.redirect('/login-voter')
+        console.log(req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
         res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
       } else {
         // console.log(dt)
@@ -44,6 +75,7 @@ export const requireVoterAuth = (req, res, next) => {
       }
     })
   } else {
+    console.log(req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
     res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
     // res.redirect('/login');
   }
@@ -56,6 +88,7 @@ export const requireAdminAuth = (req, res, next) => {
     jwt.verify(token, process.env.secreTokenKeyForAdmin, (err, dt) => {
       if (err) {
         // res.redirect('/login-voter')
+        console.log(req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
         res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
       } else {
         // console.log(dt)
@@ -65,6 +98,7 @@ export const requireAdminAuth = (req, res, next) => {
       }
     })
   } else {
+    console.log(req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
     res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
     // res.redirect('/login');
   }
