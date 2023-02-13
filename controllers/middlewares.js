@@ -43,6 +43,8 @@ export const handleUploadErr = (err,req,res,next)=>{
     res.status(400).json({ok:false,msg:err.message})
   }
 }
+
+
 export const requireVoterAuth = (req, res, next) => {
 
   let token = req.cookies._x_ray_mo_;
