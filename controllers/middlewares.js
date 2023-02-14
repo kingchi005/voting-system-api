@@ -24,10 +24,10 @@ export const uploadImage = async (image) => {
     // Upload the image
     const result = await cloudinary.uploader.upload(image, options);
     // console.log(result);
-    return { image_details: result }
+    return result
   } catch (error) {
     // console.log(error)
-    return { error }
+    return error
   }
 }
 
