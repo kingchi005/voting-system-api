@@ -6,7 +6,7 @@ const _create = async (req, res) => {
   if (!name) return res.status(401)
     .json({ ok: false, msg: "Office name is required" })
   try {
-    const created = await Office.create({ name, _id:generateMongoObjectId() })
+    const created = await Office.create({ name, _id: generateMongoObjectId() })
     return res.status(200)
       .json({ ok: true, msg: 'Office created successfully' })
   } catch (e) {
@@ -17,8 +17,28 @@ const _create = async (req, res) => {
     return res.status(505)
       .json({ ok: false, msg: 'An error occoured' })
   }
-
 }
+
+const _update = async (req, res) => {
+  const _id = req.params.id
+  const exist = await Office.findOne({ where: { _id } })
+  if (!exist) return res.status(404).json({ ok: false, msg: "office not found" })
+  const { name } = req.body
+  if (!name) return res.status(401)
+    .json({ ok: false, msg: "Office name is required" })
+  try {
+    const updated = await Office.update({ name }, { where: { _id } })
+    return res.status(200)
+      .json({ ok: true, msg: 'Office updated successfully' /*,updated_office:updated*/ })
+  } catch (e) {
+    // console.log(e.errors[0].validatorKey);
+    if (e.errors[0].validatorKey === 'not_unique') {
+      return res.json({ ok: false, msg: e.errors[0].message })
+    }
+    return res.status(505)
+      .json({ ok: false, msg: 'An error occoured' })
+  }
+};
 
 const _delete = async (req, res) => {
   const _id = req.params.id
@@ -27,7 +47,7 @@ const _delete = async (req, res) => {
   if (!office) return res.status(404)
     .json({ ok: false, msg: "Office not found" })
   try {
-    const updated = await Office.update({ deleted_flag: true, name:'---' }, { where: { _id } })
+    const updated = await Office.update({ deleted_flag: true, name: '---' }, { where: { _id } })
     return res.status(200)
       .json({ ok: true, msg: 'Office deleted successfully' })
   } catch (e) {
@@ -43,4 +63,4 @@ const _fetch = async (req, res) => {
     .json({ ok: true, offices })
 }
 
-export default { _create, _fetch, _delete }
+export default { _create, _fetch, _delete, _update }

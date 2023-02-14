@@ -17,7 +17,7 @@ const _create = async (req, res) => {
   try {
     const uploaded_image = await uploadImage(value.avatar)
     if (uploaded_image.error) {
-      return res.status(505).json({ ok: false, msg: "An Error occoured", error:uploaded_image.error })
+      return res.status(505).json({ ok: false, msg: "An Error occoured", error: uploaded_image.error })
     }
     // console.log(uploaded_image)
     value.avatar = uploaded_image.secure_url
@@ -34,6 +34,42 @@ const _create = async (req, res) => {
     return res.status(505).json({ ok: false, msg: 'An error occoured', err: e.message })
   }
 }
+
+const _update = async (req, res) => {
+
+  const _id = req.params.id
+  const exist = await Aspirant.findOne({ where: { _id } })
+  if (!exist) return res.status(404).json({ ok: false, msg: "Aspirant does not exist" })
+
+  const { error, value } = aspirantSchema.validate(req.body, { abortEarly: false })
+  if (error) return res.status(400)
+    .json({ ok: false, msg: error.message })
+
+  let asp_available = await Office.findOne({ where: { id: value.office_id, deleted_flag: false } })
+  if (!asp_available) return res.status(404).json({ ok: false, msg: 'Selected office is not availavle' })
+
+  // upload to cloudinary
+  try {
+    const uploaded_image = await uploadImage(value.avatar)
+    if (uploaded_image.error) {
+      return res.status(505).json({ ok: false, msg: "An Error occoured", error: uploaded_image.error })
+    }
+    // console.log(uploaded_image)
+    value.avatar = uploaded_image.secure_url
+    value._id = generateMongoObjectId()
+    // value.avatar = avatar_name_
+    // update here--------------------------------------------------
+    const updated = await Aspirant.updated({ value }, { where: { _id } })
+    return res.status(200)
+      .json({ ok: true, msg: 'Aspirant updated successfully' })
+  } catch (e) {
+    // console.log(e.name)
+    if (e.name == "SequelizeUniqueConstraintError") {
+      if (e.errors[0]?.validatorKey === 'not_unique') return res.json({ ok: false, msg: e.errors[0].message })
+    }
+    return res.status(505).json({ ok: false, msg: 'An error occoured', err: e.message })
+  }
+};
 
 const _delete = async (req, res) => {
   const _id = req.params.id
@@ -58,4 +94,4 @@ const _fetch = async (req, res) => {
   res.status(200).json({ ok: true, msg: "Fetch successful", aspirants })
 }
 
-export default { _create, _fetch, _delete }
+export default { _create, _fetch, _delete, _update }

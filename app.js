@@ -18,16 +18,16 @@ const app = express()
 
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 // app.set('view engine', 'html');
 app.listen(process.env.PORT, () => console.log("serving ..."))
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
   res.render('build/index.html')
 })
-
+*/
 app.use('/auth', authRoute)
 app.use('/api', /*requireVoterAuth,*/ apiRoute)
 app.use('/admin', /*requireAdminAuth,*/ adminRoute)
