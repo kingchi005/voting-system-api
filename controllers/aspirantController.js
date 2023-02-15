@@ -38,7 +38,7 @@ const _create = async (req, res) => {
 const _update = async (req, res) => {
 
   const _id = req.params.id
-  const exist = await Aspirant.findOne({ where: { _id } })
+  const exist = await Aspirant.findOne({ where: { _id, deleted_flag: false } })
   if (!exist) return res.status(404).json({ ok: false, msg: "Aspirant does not exist" })
 
   const { error, value } = aspirantSchema.validate(req.body, { abortEarly: false })
@@ -48,6 +48,7 @@ const _update = async (req, res) => {
   let asp_available = await Office.findOne({ where: { id: value.office_id, deleted_flag: false } })
   if (!asp_available) return res.status(404).json({ ok: false, msg: 'Selected office is not availavle' })
 
+  	const {first_name, other_names, department, office_id} = value
   // upload to cloudinary
   try {
     const uploaded_image = await uploadImage(value.avatar)
@@ -55,13 +56,10 @@ const _update = async (req, res) => {
       return res.status(505).json({ ok: false, msg: "An Error occoured", error: uploaded_image.error })
     }
     // console.log(uploaded_image)
-    value.avatar = uploaded_image.secure_url
-    value._id = generateMongoObjectId()
-    // value.avatar = avatar_name_
     // update here--------------------------------------------------
-    const updated = await Aspirant.updated({ value }, { where: { _id } })
-    return res.status(200)
-      .json({ ok: true, msg: 'Aspirant updated successfully' })
+    const updated = await Aspirant.update({ first_name, other_names, department, office_id, avatar:uploaded_image.secure_url }, { where: { _id } })
+    if (!updated) return res.status(200).json({ ok: false, msg: 'Could not update aspirant' })
+    return res.status(200).json({ ok: true, msg: 'Aspirant updated successfully' })
   } catch (e) {
     // console.log(e.name)
     if (e.name == "SequelizeUniqueConstraintError") {

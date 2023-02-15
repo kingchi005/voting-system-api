@@ -21,7 +21,7 @@ const _create = async (req, res) => {
 
 const _update = async (req, res) => {
   const _id = req.params.id
-  const exist = await Office.findOne({ where: { _id } })
+  const exist = await Office.findOne({ where: { _id,deleted_flag: false } })
   if (!exist) return res.status(404).json({ ok: false, msg: "office not found" })
   const { name } = req.body
   if (!name) return res.status(401)
