@@ -92,4 +92,76 @@ const _fetch = async (req, res) => {
   res.status(200).json({ ok: true, msg: "Fetch successful", aspirants })
 }
 
-export default { _create, _fetch, _delete, _update }
+const _fetch_index = async (req, res) => {
+	const election_index = []
+
+	const offices = await Office.findAll({ where: { deleted_flag: false } })
+	if (!offices.length || !offices) return res.status(404).json({ ok: false, msg: "No office found" })
+	const offices_result = []
+
+	for (var i = 0; i < offices.length; i++) {
+	  // const query = `SELECT * FROM polls WHERE JSON_CONTAINS(aspirant_ids, '"${offices[i]._id}"')`
+	  // const [votes, metadata] = await sequelize.query( query);
+
+	  offices_result.push({
+	    // id: offices[i].id,
+	    _id: offices[i]._id,
+	    name: offices[i].name,
+	    deleted_flag: offices[i].deleted_flag,
+	    createdAt: offices[i].createdAt,
+	    updatedAt: offices[i].updatedAt,
+	  })
+	  // offices[i].no_of_votes = votes.length
+	};
+	// console.log(offices_result)
+
+
+	const aspirants = await Aspirant.findAll({ where: { deleted_flag: false } })
+	// if (!aspirants.length || !aspirants) return res.status(404).json({ ok: false, msg: "No aspirant found" })
+
+	const aspirants_result = []
+
+	// const votes = await Poll.findAll()
+	// console.log(votes)
+
+	for (var i = 0; i < aspirants.length; i++) {
+	  // const query = `SELECT * FROM polls WHERE JSON_CONTAINS(aspirant_ids, '"${aspirants[i]._id}"')`
+	  // const [votes, metadata] = await sequelize.query( query);
+	  
+
+	  aspirants_result.push({
+	    // id: aspirants[i].id,
+	    _id: aspirants[i]._id,
+	    first_name: aspirants[i].first_name,
+	    other_names: aspirants[i].other_names,
+	    department: aspirants[i].department,
+	    avatar: aspirants[i].avatar,
+	    deleted_flag: aspirants[i].deleted_flag,
+	    createdAt: aspirants[i].createdAt,
+	    updatedAt: aspirants[i].updatedAt,
+	    office_id: aspirants[i].office_id,
+	    // number_of_votes:votes.filter(v => v.aspirant_ids.includes(aspirants[i]._id)).length
+	  })
+	  // aspirants[i].no_of_votes = votes.length
+	};
+	// console.log(aspirants_result)
+
+	for(let o of offices) {
+
+	  let offObj = {
+	    office_name:o.name,
+	    aspirants:[]
+	  }
+	  for(let asp of aspirants_result) {
+	    if (asp.office_id == o.id) {
+	      asp.office = o.name
+	      offObj.aspirants.push(asp)
+	    }
+	  };
+
+	  election_index.push(offObj)
+	};
+
+	res.status(200).json({ ok: true, msg: "Fetch successful", election_index })
+};
+export default { _create, _fetch, _delete, _update, _fetch_index }

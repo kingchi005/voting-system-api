@@ -49,10 +49,7 @@ const _fetch = async (req, res) => {
       , updatedAt: p.updatedAt
     })
   };
-  // console.log(polls)
-  
-
-  
+  // console.log(polls)  
 
   res.status(200)
     .json({ ok: true, polls })

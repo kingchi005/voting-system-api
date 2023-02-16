@@ -9,9 +9,7 @@ import adminRoute from './routes/adminRoute.js'
 import apiRoute from './routes/apiRoute.js'
 import authRoute from './routes/authRoute.js'
 import sequelize from './models/model-config.js'
-import { requireAdminAuth } from './controllers/middlewares.js'
-import { requireVoterAuth } from './controllers/middlewares.js'
-
+import { requireVoterAuth, requireAdminAuth, /*checkVotingStarted*/ } from './controllers/middlewares.js'
 
 
 const app = express()
@@ -29,15 +27,15 @@ app.listen(process.env.PORT, () => console.log("serving ..."))
 })
 */
 app.use('/auth', authRoute)
-app.use('/api', /*requireVoterAuth,*/ apiRoute)
+app.use('/api', /*checkVotingStarted,*/ /*requireVoterAuth,*/ apiRoute)
 app.use('/admin', /*requireAdminAuth,*/ adminRoute)
 
 // error 404
 app.use((req, res) => {
-  let fullUrl = req.method + ':   ' + req.protocol + '://' + req.get('host') + req.originalUrl;
+  let fullUrl = req.method + ': ' + req.protocol + '://' + req.get('host') + req.originalUrl;
   console.log(fullUrl);
   res.status(404)
-    .json({ error: 404, msg: 'page not found', page: fullUrl })
+    .json({ error: 404, msg: 'page not found', url: fullUrl })
 })
 
 /*app.use(bodyParser.json({

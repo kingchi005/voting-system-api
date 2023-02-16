@@ -7,7 +7,7 @@ const router = express.Router()
 
 
 router.get("/fetch-aspirants", aspirantController._fetch)
-
+router.get("/index", aspirantController._fetch_index)
 router.post("/create-vote/:id", pollController._create)
 
 export default router
