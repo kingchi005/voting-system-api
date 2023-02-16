@@ -110,7 +110,7 @@ export const requireAdminAuth = (req, res, next) => {
 export const checkVotingCommenced = async (req, res, next) => {
   const admin = await Admin.findOne({ where: { pass_name: 'kingchi' } })
   if (admin.votingCommenced) return next()
-  return res.status(404).json({ ok: false, msg: "Voting process has not yet commenced" })
+  return res.status(404).json({ ok: false, msg: "Voting process has not yet commenced or already ended" })
 };
 
 // save avatar
