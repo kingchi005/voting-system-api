@@ -3,9 +3,12 @@ import officeController from '../controllers/officeController.js'
 import aspirantController from '../controllers/aspirantController.js'
 import pollController from '../controllers/pollController.js'
 import voterController from '../controllers/voterController.js'
+import adminController from '../controllers/adminController.js'
 
 const router = express.Router()
 
+router.unlock("/commence-voting", adminController._start_voting)
+router.lock("/end-voting", adminController._end_voting)
 router.post("/create-aspirant", aspirantController._create)
 router.patch("/update-aspirant/:id", aspirantController._update)
 router.delete("/delete-aspirant/:id", aspirantController._delete)

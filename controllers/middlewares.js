@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
 import multer from 'multer'
 import { v2 as cloudinary } from 'cloudinary'
+import { Admin } from '../models/model-config.js'
+
 
 
 // cloudinary function -------------------------
@@ -105,6 +107,11 @@ export const requireAdminAuth = (req, res, next) => {
   // next()
 }
 
+export const checkVotingCommenced = async (req, res, next) => {
+  const admin = await Admin.findOne({ where: { pass_name: 'kingchi' } })
+  if (admin.votingCommenced) return next()
+  return res.status(404).json({ ok: false, msg: "Voting process has not yet commenced" })
+};
 
 // save avatar
 // let avatar_name_;

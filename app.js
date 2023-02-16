@@ -9,7 +9,7 @@ import adminRoute from './routes/adminRoute.js'
 import apiRoute from './routes/apiRoute.js'
 import authRoute from './routes/authRoute.js'
 import sequelize from './models/model-config.js'
-import { requireVoterAuth, requireAdminAuth, /*checkVotingStarted*/ } from './controllers/middlewares.js'
+import { requireVoterAuth, requireAdminAuth, checkVotingCommenced } from './controllers/middlewares.js'
 
 
 const app = express()
@@ -26,8 +26,8 @@ app.listen(process.env.PORT, () => console.log("serving ..."))
   res.render('build/index.html')
 })
 */
-app.use('/auth', authRoute)
-app.use('/api', /*checkVotingStarted,*/ /*requireVoterAuth,*/ apiRoute)
+app.use('/auth', checkVotingCommenced, authRoute)
+app.use('/api', checkVotingCommenced, /*requireVoterAuth,*/ apiRoute)
 app.use('/admin', /*requireAdminAuth,*/ adminRoute)
 
 // error 404

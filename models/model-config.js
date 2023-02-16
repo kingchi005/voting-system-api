@@ -175,6 +175,11 @@ const Admin = sequelize.define('Admin', {
     , allowNull: false
     , defaultValue: false
   }
+  , votingCommenced: {
+    type: DataTypes.BOOLEAN
+    , allowNull: false
+    , defaultValue: false
+  }
 
 })
 const Poll = sequelize.define('Poll', {
@@ -226,7 +231,7 @@ Voter.hasOne(Poll, {
 // console.log(process.env.DB_HOST)
 
 // --------------------------test------------
-// await sequelize.sync({ force: true, /*alter: true*/ });
+// await sequelize.sync({ force: false, /*alter: true*/ });
 // Office.create(officeSchema)
 // Aspirant.create(aspirantSchema)
 // Voter.create(voterSchema)
