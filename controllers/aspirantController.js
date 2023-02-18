@@ -90,10 +90,10 @@ const _fetch = async (req, res) => {
 
   const aspirants = await Aspirant.findAll({ where: { deleted_flag: false } })
   const offices = await Office.findAll({ where: { deleted_flag: false } })
-  for (let asp of aspirants) {
+/*  for (let asp of aspirants) {
   	asp.office = offices.filter(o => o.id == asp.office_id)
   }
-
+*/
   res.status(200).json({ ok: true, msg: "Fetch successful", aspirants })
 }
 
