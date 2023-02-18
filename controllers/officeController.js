@@ -6,9 +6,9 @@ const _create = async (req, res) => {
   if (!name) return res.status(401)
     .json({ ok: false, msg: "Office name is required" })
   try {
-    const created = await Office.create({ name, _id: generateMongoObjectId() })
+    const office = await Office.create({ name, _id: generateMongoObjectId() })
     return res.status(200)
-      .json({ ok: true, msg: 'Office created successfully' })
+      .json({ ok: true, msg: 'Office created successfully', office })
   } catch (e) {
     // console.log(e.errors[0].validatorKey);
     if (e.errors[0].validatorKey === 'not_unique') {
@@ -47,7 +47,7 @@ const _delete = async (req, res) => {
   if (!office) return res.status(404)
     .json({ ok: false, msg: "Office not found" })
   try {
-    const updated = await Office.update({ deleted_flag: true, name: '---' }, { where: { _id } })
+    const updated = await Office.update({ deleted_flag: true, name: office._id+'---deleted' }, { where: { _id } })
     return res.status(200)
       .json({ ok: true, msg: 'Office deleted successfully' })
   } catch (e) {

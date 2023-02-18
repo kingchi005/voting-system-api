@@ -23,9 +23,9 @@ const _create = async (req, res) => {
     value.avatar = uploaded_image.secure_url
     value._id = generateMongoObjectId()
     // value.avatar = avatar_name_
-    const done = await Aspirant.create(value)
+    const aspirant = await Aspirant.create(value)
     return res.status(200)
-      .json({ ok: true, msg: 'Aspirant created successfully' })
+      .json({ ok: true, msg: 'Aspirant created successfully', aspirant })
   } catch (e) {
     // console.log(e.name)
     if (e.name == "SequelizeUniqueConstraintError") {
@@ -76,7 +76,7 @@ const _delete = async (req, res) => {
   if (!aspirant) return res.status(404)
     .json({ ok: false, msg: "Aspirant not found" })
   try {
-    const updated = await Aspirant.update({ deleted_flag: true, first_name: '---' }, { where: { _id } })
+    const updated = await Aspirant.update({ deleted_flag: true, first_name: aspirant._id+'---deleted' }, { where: { _id } })
     // console.log(updated)
     return res.status(200).json({ ok: true, msg: 'Aspirant deleted successfully' /*, deleted_aspirant: updated*/ })
   } catch (e) {
@@ -89,6 +89,11 @@ const _delete = async (req, res) => {
 const _fetch = async (req, res) => {
 
   const aspirants = await Aspirant.findAll({ where: { deleted_flag: false } })
+  const offices = await Office.findAll({ where: { deleted_flag: false } })
+  for (let asp of aspirants) {
+  	asp.office = offices.filter(o => o.id == asp.office_id)
+  }
+
   res.status(200).json({ ok: true, msg: "Fetch successful", aspirants })
 }
 
