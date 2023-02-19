@@ -1,5 +1,5 @@
 import multer from 'multer'
-import { aspirantSchema } from './validator.js'
+import { aspirantSchema, aspirantSchema_update } from './validator.js'
 import { Aspirant, generateMongoObjectId, Office } from '../models/model-config.js'
 import { uploadImage } from './middlewares.js'
 
@@ -41,7 +41,7 @@ const _update = async (req, res) => {
   const exist = await Aspirant.findOne({ where: { _id, deleted_flag: false } })
   if (!exist) return res.status(404).json({ ok: false, msg: "Aspirant does not exist" })
 
-  const { error, value } = aspirantSchema.validate(req.body, { abortEarly: false })
+  const { error, value } = aspirantSchema_update.validate(req.body, { abortEarly: false })
   if (error) return res.status(400)
     .json({ ok: false, msg: error.message })
 
@@ -51,13 +51,18 @@ const _update = async (req, res) => {
   	const {first_name, other_names, department, office_id} = value
   // upload to cloudinary
   try {
-    const uploaded_image = await uploadImage(value.avatar)
-    if (uploaded_image.error) {
-      return res.status(505).json({ ok: false, msg: "An Error occoured", error: uploaded_image.error })
-    }
+  	let updated
+  	if (value.avatar != '') {
+	    const uploaded_image = await uploadImage(value.avatar)
+	    if (uploaded_image.error) {
+	      return res.status(505).json({ ok: false, msg: "An Error occoured", error: uploaded_image.error })
+	    }  		
+	    updated = await Aspirant.update({ first_name, other_names, department, office_id, avatar:uploaded_image.secure_url }, { where: { _id } })  		
+  	}else{
     // console.log(uploaded_image)
     // update here--------------------------------------------------
-    const updated = await Aspirant.update({ first_name, other_names, department, office_id, avatar:uploaded_image.secure_url }, { where: { _id } })
+	    updated = await Aspirant.update({ first_name, other_names, department, office_id }, { where: { _id } })
+  	}
     if (!updated) return res.status(200).json({ ok: false, msg: 'Could not update aspirant' })
     return res.status(200).json({ ok: true, msg: 'Aspirant updated successfully' })
   } catch (e) {

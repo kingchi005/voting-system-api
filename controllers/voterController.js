@@ -29,12 +29,12 @@ const _create = async (req, res) => {
     }
     return res.status(500).json({ ok: false, msg: "An error occoured", err:e.message })
   }
-  res.json({ ok: true, msg: "Voters created sucssfully", tokens })
+  res.json({ ok: true, msg: "Voters created sucssfully", tokens, voters:bulk_voters })
 }
 
 const _fetch = async (req, res) => {
-  const voter = await Voter.findAll({ where: { } })
-  res.status(200).json({ ok: true, voter })
+  const voters = await Voter.findAll({ where: { } })
+  res.status(200).json({ ok: true, voters })
 }
 
 export default { _create, _fetch }

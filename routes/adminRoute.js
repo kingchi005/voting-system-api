@@ -24,5 +24,6 @@ router.delete("/delete-office/:id", officeController._delete)
 
 router.post("/register-voters", voterController._create)
 router.get("/fetch-voters", voterController._fetch)
+router.get("/fetch-tokens", adminController._fetch_tokens)
 
 export default router

@@ -1,4 +1,4 @@
-import { Admin } from '../models/model-config.js'
+import { Admin, Token } from '../models/model-config.js'
 
 const _create = (req, res) => {
   res.json({ ok: true, msg: "created now" })
@@ -7,6 +7,11 @@ const _create = (req, res) => {
 const _fetch = (req, res) => {
   res.json({ ok: true, msg: "fetched now" })
 }
+
+const _fetch_tokens = async (req, res) => {
+  const tokens = await Token.findAll()
+  res.json({ ok: true, msg: "fetched now", tokens })
+};
 
 const _start_voting = async (req, res) => {
 
@@ -24,4 +29,4 @@ const _end_voting = async (req, res) => {
   res.json({ ok: true, msg: "Voting process ended now" })
 }
 
-export default { _create, _fetch, _start_voting, _end_voting }
+export default { _create, _fetch, _start_voting, _end_voting, _fetch_tokens }
