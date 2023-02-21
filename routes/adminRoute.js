@@ -7,9 +7,12 @@ import adminController from '../controllers/adminController.js'
 
 const router = express.Router()
 
-router.unlock("/commence-voting", adminController._start_voting)
-router.lock("/end-voting", adminController._end_voting)
+router.get("/fetch-aspirants", aspirantController._fetch)
+router.put("/end-voting", adminController._end_voting)
+router.put("/commence-voting", adminController._start_voting)
+router.get("/election-status", adminController._fetch_election_status)
 
+router.get("/create-aspirant", aspirantController._create)
 router.post("/create-aspirant", aspirantController._create)
 router.patch("/update-aspirant/:id", aspirantController._update)
 router.delete("/delete-aspirant/:id", aspirantController._delete)

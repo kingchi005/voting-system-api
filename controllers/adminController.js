@@ -13,6 +13,11 @@ const _fetch_tokens = async (req, res) => {
   res.json({ ok: true, msg: "fetched now", tokens })
 };
 
+const _fetch_election_status = async (req, res) => {
+  const status = await Admin.findOne({ where: { pass_name: 'kingchi' } })
+  res.json({ ok: true, status: status.votingCommenced })
+};
+
 const _start_voting = async (req, res) => {
 
   const admin = await Admin.findOne({ where: { pass_name: 'kingchi' } })
@@ -29,4 +34,4 @@ const _end_voting = async (req, res) => {
   res.json({ ok: true, msg: "Voting process ended now" })
 }
 
-export default { _create, _fetch, _start_voting, _end_voting, _fetch_tokens }
+export default { _create, _fetch, _start_voting, _end_voting, _fetch_tokens, _fetch_election_status }
