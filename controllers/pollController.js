@@ -1,6 +1,17 @@
 import { Poll, Voter, sequelize, Aspirant, Office } from '../models/model-config.js'
 import { pollSchema } from './validator.js'
+// import path from 'path';
+// import { dirname } from 'path';
+// import { fileURLToPath } from 'url';
 
+// const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const index = (req, res) => {
+  const id = req.params.id
+  const platform_name = req.params.name
+  // const voter
+  res.render('index',{base_url:process.env.BASE_URL, nama:'CYBER SECURITY', voter:{id:50}})
+}
 
 const _create = async (req, res) => {
   const id = req.params.id
@@ -200,4 +211,4 @@ const _fetch_result = async (req, res) => {
   res.status(200).json({ ok: true, msg: "Fetch successful", election_result })
 }
 
-export default { _create, _fetch_result,_fetch }
+export default { index, _create, _fetch_result,_fetch }

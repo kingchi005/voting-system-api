@@ -66,9 +66,9 @@ export const requireVoterAuth = (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.secreTokenKey, (err, dt) => {
       if (err) {
-        // res.redirect('/login-voter')
-        console.log(req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
-        res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
+        console.log('Unauthorized ---- '+req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
+        res.redirect('/login-voter')
+        // res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
       } else {
         // console.log(dt)
         // res.locals.fm = fm;
@@ -77,9 +77,9 @@ export const requireVoterAuth = (req, res, next) => {
       }
     })
   } else {
-    console.log(req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
-    res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
-    // res.redirect('/login');
+    console.log('Unauthorized ---- '+req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
+    res.redirect('/login-voter');
+    // res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
   }
   // next()
 }

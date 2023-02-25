@@ -1,10 +1,9 @@
 import Joi from 'joi'
 
 export const pollSchema = Joi.object({
-  office_ids: Joi.array()
-    .required()
-  , aspirant_ids: Joi.array()
-    .required()
+  // office_ids: Joi.array() .required()
+  aspirant_ids: Joi.array()
+    .required().min(1).message('Vote atleast one candidate')
 })
 
 export const voterSchema = Joi.object({

@@ -8,8 +8,10 @@ dotenv.config()
 import adminRoute from './routes/adminRoute.js'
 import apiRoute from './routes/apiRoute.js'
 import authRoute from './routes/authRoute.js'
+import voteRoute from './routes/voteRoute.js'
 import sequelize from './models/model-config.js'
 import { requireVoterAuth, requireAdminAuth, checkVotingCommenced } from './controllers/middlewares.js'
+import pollController from './controllers/pollController.js'
 
 
 const app = express()
@@ -22,6 +24,8 @@ app.use(cors());
 // app.set('view engine', 'html');
 app.listen(process.env.PORT, () => console.log("serving ..."))
 
+app.set('view engine', 'ejs');
+
 /*app.get('/', (req, res) => {
   res.render('build/index.html')
 })
@@ -29,7 +33,7 @@ app.listen(process.env.PORT, () => console.log("serving ..."))
 app.use('/auth', checkVotingCommenced, authRoute)
 app.use('/api', checkVotingCommenced, /*requireVoterAuth,*/ apiRoute)
 app.use('/admin', /*requireAdminAuth,*/ adminRoute)
-
+app.use('/v1.0', checkVotingCommenced, voteRoute);
 // error 404
 app.use((req, res) => {
   let fullUrl = req.method + ': ' + req.protocol + '://' + req.get('host') + req.originalUrl;
