@@ -7,7 +7,7 @@ import { requireVoterAuth } from '../controllers/middlewares.js'
 
 router.get('/:id/:name/vote', requireVoterAuth, pollController.index);
 router.get('/login-voter', (req, res)=>{
-	res.render('login')
+	res.render('login',{title:'Login'})
 });
 
 export default router

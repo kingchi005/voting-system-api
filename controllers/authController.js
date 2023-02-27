@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { login_voterSchema, login_adminSchema } from './validator.js'
 import { Voter, Token, Admin } from '../models/model-config.js'
 
-const maxAge = 24 * 60 * 60;
+const maxAge = 1 * 60 * 60;
 const createVoterToken = id => jwt.sign({ id }, process.env.secreTokenKey, { expiresIn: maxAge });
 const createAdminToken = id => jwt.sign({ id }, process.env.secreTokenKeyForAdmin, { expiresIn: maxAge });
 
@@ -62,11 +62,15 @@ const login_admin = async (req, res) => {
 
   try {
     const token = createAdminToken(admin.pass_token);
-    res.cookie('_x__r_a_y__m_u_m_m_y_', token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(200).json({ ok: true, msg: 'Login successful' });
+    // res.cookie('_x__r_a_y__m_u_m_m_y_', token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(200).json({ ok: true, msg: 'Login successful', token });
   } catch (e) {
     res.status(200).json({ ok: false, msg: 'An error occured', err: e.message });
   }
 }
 
-export default { login_voter, login_admin }
+const logout_voter = (req, res) => {
+  res.cookie('_x_ray_mo_', 'log out succefful', {maxAge: 1});
+  res.redirect('/v1.0/login-voter');
+};
+export default { login_voter, login_admin, logout_voter }

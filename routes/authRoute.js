@@ -1,14 +1,12 @@
 import express from 'express'
 const router = express.Router()
 import authController from '../controllers/authController.js'
-import { requireVoterAuth } from '../controllers/middlewares.js'
+import { requireVoterAuth,checkVotingCommenced } from '../controllers/middlewares.js'
 
 
-router.post("/login-voter", authController.login_voter)
+router.post("/login-voter", checkVotingCommenced, authController.login_voter)
+router.get("/logout-voter", requireVoterAuth, authController.logout_voter)
 
-router.get("/logout-voter", requireVoterAuth, function welcome(req, res) {
-  res.json({ ok: true, msg: "voter you just logged out" })
-})
 
 router.post("/login-admin", authController.login_admin)
 

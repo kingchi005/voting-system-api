@@ -30,9 +30,9 @@ app.set('view engine', 'ejs');
   res.render('build/index.html')
 })
 */
-app.use('/auth', checkVotingCommenced, authRoute)
+app.use('/auth', authRoute)
 app.use('/api', checkVotingCommenced, /*requireVoterAuth,*/ apiRoute)
-app.use('/admin', /*requireAdminAuth,*/ adminRoute)
+app.use('/admin', requireAdminAuth, adminRoute)
 app.use('/v1.0', checkVotingCommenced, voteRoute);
 // error 404
 app.use((req, res) => {
