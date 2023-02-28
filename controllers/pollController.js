@@ -1,4 +1,4 @@
-import { Poll, Voter, sequelize, Aspirant, Office } from '../models/model-config.js'
+import { Admin, Poll, Voter, sequelize, Aspirant, Office } from '../models/model-config.js'
 import { pollSchema } from './validator.js'
 // import path from 'path';
 // import { dirname } from 'path';
@@ -26,7 +26,7 @@ const _create = async (req, res) => {
   const voter = await Voter.findOne({ where: { _id } })
   if (!voter) return res.status(401)
     .json({ ok: false, msg: 'Voter does not exist' })
-  if (voter /*[0]*/ .dataValues.voted) return res.status(401)
+  if (voter.voted) return res.status(401)
     .json({ ok: false, msg: 'You cannot vote twice' })
 
   value.voter_id = voter.id
@@ -204,8 +204,9 @@ const _fetch_result = async (req, res) => {
 
     election_result.votes.push(offObj)
   };
-
-  res.status(200).json({ ok: true, msg: "Fetch successful", election_result })
+  const election_started = (await Admin.findOne({ where: { pass_name: 'kingchi' } })).votingCommenced
+  
+  res.status(200).json({ ok: true, msg: "Fetch successful", election_started, election_result })
 }
 
 export default { index, _create, _fetch_result, _fetch }

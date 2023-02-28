@@ -15,7 +15,7 @@ const _create = async (req, res) => {
   try {
     for(let item of reg_nos) {
       tokens.push({_token:genToken()})
-      bulk_voters.push({_id:generateMongoObjectId() ,reg_no:item})
+      bulk_voters.push({_id:generateMongoObjectId() ,reg_no:item, voted:false})
     };
     // console.log(tokens)
     // console.log(bulk_voters)
@@ -25,7 +25,7 @@ const _create = async (req, res) => {
   } catch(e) {
     console.log(e);
     if (e.errors[0]?.validatorKey === 'not_unique') {
-      return res.json({ ok: false, msg: e.errors[0].message })
+      return res.json({ ok: false, msg: e.errors[0].message+' - '+e.errors[0].value, })
     }
     return res.status(500).json({ ok: false, msg: "An error occoured", err:e.message })
   }

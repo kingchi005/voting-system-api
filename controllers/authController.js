@@ -9,7 +9,6 @@ const createAdminToken = id => jwt.sign({ id }, process.env.secreTokenKeyForAdmi
 
 
 const login_voter = async (req, res) => {
-
   let errors = {}
   const { error, value } = login_voterSchema.validate(req.body, { abortEarly: false })
   if (error) {
@@ -37,7 +36,7 @@ const login_voter = async (req, res) => {
     Token.update({ isUsed: true }, { where: { _token } })
     const token = createVoterToken(voter._id);
     res.cookie('_x_ray_mo_', token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(200).json({ ok: true, msg: 'Login successful', voter: voter._id });
+    res.status(200).json({ ok: true, msg: 'Login successful'/*, voter: voter._id */});
   } catch (e) {
     res.status(200).json({ ok: false, msg: 'An error occured', err: e.message });
   }

@@ -71,12 +71,13 @@ export const requireVoterAuth = async  (req, res, next) => {
         res.redirect('/v1.0/login-voter')
         // res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
       } else {
-        let voter = await Voter.findOne({_id:dt.id});
+        let voter = await Voter.findOne({where:{_id:dt.id}});
         res.locals.voter = voter;
         next();
       }
     })
   } else {
+    res.locals.user = null;
     console.log('Unauthorized ---- '+req.method + ':  ' + process.env.BASE_URL + req.baseUrl)
     res.redirect('/v1.0/login-voter');
     // res.status(401).json({ ok: false, msg: "Unauthorized request >_<" })
