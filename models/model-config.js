@@ -3,16 +3,16 @@ dotenv.config()
 import { Sequelize, Model, DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt'
 
-const sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
+// const sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
 // const sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
 
 
 
-/*const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.PASSWORD, {
+const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.PASSWORD, {
   host: process.env.DB_HOST
   , dialect: process.env.DB_TYPE
 })
-*/
+
 const aspirantSchema = {
   first_name: "first-name"
   , other_names: "middleName surname"
@@ -234,9 +234,13 @@ Voter.hasOne(Poll, {
 })
 
 // console.log(process.env.DB_HOST)
-
+console.log(await Admin.create({
+  pass_name: 'kingchi',
+  pass_token: 'Dev kingchi',
+  isActive: true,
+}))
 // --------------------------test------------
-await sequelize.sync({ force: false, /*alter: true*/ });
+// await sequelize.sync({ force: false, /*alter: true*/ });
 // Office.create(officeSchema)
 // Aspirant.create(aspirantSchema)
 // Voter.create(voterSchema)
