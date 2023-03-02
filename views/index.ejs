@@ -119,7 +119,7 @@
       },
       methods:{
         async fetch_index () {
-          const index_data = await (await fetch("http://127.0.0.1:500/api/index")).json()
+          const index_data = await (await fetch("<%= process.env.BASE_URL%>/api/index")).json()
           // return console.log(index_data)
           if (index_data.ok) this.election_index = index_data.election_index
         },
@@ -134,7 +134,7 @@
           }
           /*07065171308*/
           try {
-            const res = await fetch("http://127.0.0.1:500/api/create-vote/<%= voter._id %>", {
+            const res = await fetch("<%= process.env.BASE_URL%>/api/create-vote/<%= voter._id %>", {
               method: "POST"
               , body: JSON.stringify(req)
               , headers: {
@@ -162,8 +162,8 @@
           // console.log(this.elected_aspirants)
         },
         async logout(){
-          // const res = await fetch("http://127.0.0.1:500/auth/logout-voter")
-          location.assign("http://127.0.0.1:500/auth/logout-voter")
+          // const res = await fetch("<%= process.env.BASE_URL%>/auth/logout-voter")
+          location.assign("<%= process.env.BASE_URL%>/auth/logout-voter")
         }
       },
       created(){

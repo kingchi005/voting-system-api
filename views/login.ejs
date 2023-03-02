@@ -14,7 +14,7 @@
           <!-- <v-img
             class="mx-auto mb-10"
             max-width="228"
-            src="http://127.0.0.1:500/Emmanuel.jpg"
+            src="<% process.env.BASE_URL %>/Emmanuel.jpg"
           ></v-img> -->
 
           <v-card
@@ -106,7 +106,7 @@
             reg_no:this.reg_no,
             _token:this.pass_token
           }
-          const res = await fetch("http://127.0.0.1:500/auth/login-voter", {
+          const res = await fetch("<% process.env.BASE_URL %>/auth/login-voter", {
             method: "POST"
             , body: JSON.stringify(req)
             , headers: {
