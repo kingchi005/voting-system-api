@@ -5,15 +5,13 @@ import bcrypt from 'bcrypt'
 
 // const sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
 let sequelize;
-
-if (process.env.PROD_ENV) {
+if (process.env.DEV_ENV == 'production') {
   sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
 }else{
   sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.PASSWORD, {
     host: process.env.DB_HOST
     , dialect: process.env.DB_TYPE
   })
-
 }
 
 

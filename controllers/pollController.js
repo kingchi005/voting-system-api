@@ -33,7 +33,7 @@ const _create = async (req, res) => {
   try {
     const done = await Poll.create(value)
     Voter.update({ voted: true }, { where: { _id } })
-    return res.status(200).json({ ok: true, msg: 'Voted successfully' })
+    return res.status(200).json({ ok: true, msg: 'You have voted successfully' })
   } catch (e) {
     console.log(e /*.errors[0].validatorKe*/ );
     if (e.errors[0]?.validatorKey === 'not_unique') {

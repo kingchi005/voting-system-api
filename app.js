@@ -33,7 +33,7 @@ app.set('view engine', 'ejs');
 app.use('/auth', authRoute)
 app.use('/api', checkVotingCommenced, /*requireVoterAuth,*/ apiRoute)
 app.use('/admin', requireAdminAuth, adminRoute)
-app.use('/v1.0', checkVotingCommenced, voteRoute);
+app.use('/v1.0', voteRoute);
 // error 404
 app.use((req, res) => {
   let fullUrl = req.method + ': ' + req.protocol + '://' + req.get('host') + req.originalUrl;
