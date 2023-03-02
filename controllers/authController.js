@@ -10,12 +10,12 @@ const createAdminToken = id => jwt.sign({ id }, process.env.secreTokenKeyForAdmi
 
 const login_voter = async (req, res) => {
   let errors = {}
-  const { error, value } = login_voterSchema.validate(req.body, { abortEarly: false })
+  const { error, value } = login_voterSchema.validate(req.body, { abortEarly: true })
   if (error) {
-    error.details.forEach(properties => {
-      errors[properties.path] = properties.message;
-    })
-    return res.status(400).json({ ok: false, errors })
+    // error.details.forEach(properties => {
+    //   errors[properties.path] = properties.message;
+    // })
+    return res.status(400).json({ ok: false, msg:error.message })
   }
 
   const { reg_no, _token } = value;
