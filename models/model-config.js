@@ -240,7 +240,7 @@ Voter.hasOne(Poll, {
 })
 
 // console.log(process.env.DB_HOST)
-console.log(await Admin.create({pass_name: 'kingchi', pass_token: 'Dev kingchi', isActive: true, }))
+// console.log(await Admin.create({pass_name: 'kingchi', pass_token: 'Dev kingchi', isActive: true, }))
 // --------------------------test------------
 // await sequelize.sync({ force: false, /*alter: true*/ });
 // Office.create(officeSchema)
