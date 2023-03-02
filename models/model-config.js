@@ -4,15 +4,21 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt'
 
 // const sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
-const sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
+let sequelize;
+
+if (process.env.PROD_ENV) {
+  sequelize = new Sequelize(process.env.PG_DB_CLIENT) // Example for postgres
+}else{
+  sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.PASSWORD, {
+    host: process.env.DB_HOST
+    , dialect: process.env.DB_TYPE
+  })
+
+}
 
 
 
-/*const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.PASSWORD, {
-  host: process.env.DB_HOST
-  , dialect: process.env.DB_TYPE
-})
-*/
+
 const aspirantSchema = {
   first_name: "first-name"
   , other_names: "middleName surname"
